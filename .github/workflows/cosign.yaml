@@ -46,7 +46,8 @@ jobs:
       - id: docker_meta
         uses: docker/metadata-action@v4.4.0
         with:
-          images: ghcr.io/sigstore/sample-honk
+          images: |
+            thrinadh8898/test-max
           tags: type=sha,format=long
 
       - name: Build and Push container images
