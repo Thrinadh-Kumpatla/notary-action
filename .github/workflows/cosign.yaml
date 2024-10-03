@@ -65,7 +65,7 @@ jobs:
           for tag in ${TAGS}; do
             images+="${tag}@${DIGEST} "
           done
-          cosign sign --yes ${images}
+          cosign sign --yes --rekor-url='rekor.dev-rudder.rudderlabs.com' --fulcio-url='https://fulcio.dev-rudder.rudderlabs.com'  ${images}
           ls
         env:
           TAGS: ${{ steps.docker_meta.outputs.tags }}
@@ -82,4 +82,4 @@ jobs:
           for tag in ${TAGS}; do
             images+="${tag}@${DIGEST} "
           done
-          cosign sign --yes ${images}
+          cosign sign --yes --rekor-url='rekor.dev-rudder.rudderlabs.com' --fulcio-url='https://fulcio.dev-rudder.rudderlabs.com' ${images} 
