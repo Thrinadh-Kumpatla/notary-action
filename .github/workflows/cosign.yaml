@@ -35,13 +35,29 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-                
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+      
+      # - name: Login to GitHub Container Registry
+      #   uses: docker/login-action@v2.1.0
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - id: docker_meta
+        uses: docker/metadata-action@v4.4.0
         with:
-          context: .
+          images: |
+            thrinadh8898/test-max
+          tags: type=sha,format=long
+
+      - name: Build and Push container images
+        uses: docker/build-push-action@v4.0.0
+        id: build-and-push
+        with:
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: true
-          tags: thrinadh8898/test-python:today
+          tags: ${{ steps.docker_meta.outputs.tags }}
+
       # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
       - name: Sign image with a key
         run: |
@@ -49,8 +65,7 @@ jobs:
           for tag in ${TAGS}; do
             images+="${tag}@${DIGEST} "
           done
-          cosign sign --yes --rekor-url='rekor.dev-rudder.rudderlabs.com' --fulcio-url='https://fulcio.dev-rudder.rudderlabs.com'  ${images}
-          ls
+          cosign sign --yes --rekor-url='rekor.dev-rudder.rudderlabs.com' --fulcio-url='https://fulcio.dev-rudder.rudderlabs.com' ${images}
         env:
           TAGS: ${{ steps.docker_meta.outputs.tags }}
           # COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
@@ -66,4 +81,5 @@ jobs:
           for tag in ${TAGS}; do
             images+="${tag}@${DIGEST} "
           done
-          cosign sign --yes --rekor-url='rekor.dev-rudder.rudderlabs.com' --fulcio-url='https://fulcio.dev-rudder.rudderlabs.com' ${images} 
+          cosign sign --rekor-url='rekor.dev-rudder.rudderlabs.com' --fulcio-url='https://fulcio.dev-rudder.rudderlabs.com' --yes ${images}
+
