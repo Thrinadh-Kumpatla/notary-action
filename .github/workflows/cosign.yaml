@@ -47,7 +47,7 @@ jobs:
         uses: docker/metadata-action@v4.4.0
         with:
           images: |
-            thrinadh8898/test-max
+            thrinadh8898/sigstore-keyless
           tags: type=sha,format=long
 
       - name: Build and Push container images
@@ -65,7 +65,7 @@ jobs:
           for tag in ${TAGS}; do
             images+="${tag}@${DIGEST} "
           done
-          cosign sign --yes --rekor-url='rekor.dev-rudder.rudderlabs.com' --fulcio-url='https://fulcio.dev-rudder.rudderlabs.com' ${images}
+          cosign sign --yes ${images}
         env:
           TAGS: ${{ steps.docker_meta.outputs.tags }}
           # COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
@@ -81,5 +81,5 @@ jobs:
           for tag in ${TAGS}; do
             images+="${tag}@${DIGEST} "
           done
-          cosign sign --rekor-url='rekor.dev-rudder.rudderlabs.com' --fulcio-url='https://fulcio.dev-rudder.rudderlabs.com' --yes ${images}
+          cosign sign  --yes ${images}
 
