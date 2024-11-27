@@ -78,8 +78,10 @@ jobs:
           TAGS: ${{ steps.docker_meta.outputs.tags }}
         run: |
           images=""
+          echo ${TAGS}
           for tag in ${TAGS}; do
             images+="${tag}@${DIGEST} "
+            echo $images
           done
           cosign sign  --yes ${images}
 
