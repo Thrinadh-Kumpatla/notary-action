@@ -47,7 +47,7 @@ jobs:
         uses: docker/metadata-action@v4.4.0
         with:
           images: |
-            thrinadh8898/sigstore-keyless-max
+            thrinadh8898/sigstore-keyless-max-testing
           tags: type=sha,format=long
 
       - name: Build and Push container images
