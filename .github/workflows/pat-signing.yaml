@@ -1,4 +1,4 @@
-name: Docker Build and Push
+name: Docker Build and Push PAT Token
 on:
   push:
     branches: [ "main" ]
@@ -10,7 +10,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-      id-token: none  # Changed from 'write' since we're not using OIDC
+      id-token: none
     name: build-image
     steps:
       - uses: actions/checkout@v3.5.2
@@ -59,18 +59,9 @@ jobs:
             echo $images
           done
           
-          # Generate GitHub token-based OIDC credential
-          TOKEN_RESPONSE=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
-            https://api.github.com/user)
-          
-          # Extract email and username
-          EMAIL=$(echo $TOKEN_RESPONSE | jq -r '.email')
-          USERNAME=$(echo $TOKEN_RESPONSE | jq -r '.login')
-          
-          # Sign with issuer and email claims
+          # Sign with OIDC configuration
           cosign sign --yes \
             --fulcio-url="https://fulcio.sigstore.dev" \
             --oidc-issuer="https://github.com/login/oauth" \
             --identity-token="${GITHUB_TOKEN}" \
-            --issuer-url="https://github.com/login/oauth" \
             ${images}
