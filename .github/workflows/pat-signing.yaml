@@ -1,4 +1,4 @@
-name: Docker Build and Push via pat signing
+name: Docker Build and Push
 on:
   push:
     branches: [ "main" ]
@@ -45,20 +45,12 @@ jobs:
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
 
-      - name: Get User Identity Token
-        id: get-user-token
-        env:
-          GH_TOKEN: ${{ secrets.THRINADH_TOKEN }}
-        run: |
-          echo "USER_ID=$(curl -H "Authorization: Bearer $GH_TOKEN" \
-            https://api.github.com/user | jq -r .node_id)" >> $GITHUB_OUTPUT
-
       - name: Sign the images with PAT
         env:
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
           TAGS: ${{ steps.docker_meta.outputs.tags }}
           COSIGN_EXPERIMENTAL: 1
-          GH_TOKEN: ${{ secrets.THRINADH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.USER_PAT_TOKEN }}
         run: |
           images=""
           echo ${TAGS}
@@ -66,6 +58,19 @@ jobs:
             images+="${tag}@${DIGEST} "
             echo $images
           done
+          
+          # Generate GitHub token-based OIDC credential
+          TOKEN_RESPONSE=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            https://api.github.com/user)
+          
+          # Extract email and username
+          EMAIL=$(echo $TOKEN_RESPONSE | jq -r '.email')
+          USERNAME=$(echo $TOKEN_RESPONSE | jq -r '.login')
+          
+          # Sign with issuer and email claims
           cosign sign --yes \
-            --identity-token ${{ steps.get-user-token.outputs.USER_ID }} \
+            --fulcio-url="https://fulcio.sigstore.dev" \
+            --oidc-issuer="https://github.com/login/oauth" \
+            --identity-token="${GITHUB_TOKEN}" \
+            --issuer-url="https://github.com/login/oauth" \
             ${images}
