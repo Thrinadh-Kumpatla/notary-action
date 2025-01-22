@@ -72,4 +72,4 @@ jobs:
             images+="${tag}@${DIGEST} "
             echo $images
           done
-      #     cosign sign  --yes ${images}
+          cosign sign  --yes ${images}
