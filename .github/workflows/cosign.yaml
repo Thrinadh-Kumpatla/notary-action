@@ -61,15 +61,15 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
 
 
-      # - name: Sign the images with GitHub OIDC Token
-      #   env:
-      #     DIGEST: ${{ steps.build-and-push.outputs.digest }}
-      #     TAGS: ${{ steps.docker_meta.outputs.tags }}
-      #   run: |
-      #     images=""
-      #     echo ${TAGS}
-      #     for tag in ${TAGS}; do
-      #       images+="${tag}@${DIGEST} "
-      #       echo $images
-      #     done
+      - name: Sign the images with GitHub OIDC Token
+        env:
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
+          TAGS: ${{ steps.docker_meta.outputs.tags }}
+        run: |
+          images=""
+          echo ${TAGS}
+          for tag in ${TAGS}; do
+            images+="${tag}@${DIGEST} "
+            echo $images
+          done
       #     cosign sign  --yes ${images}
