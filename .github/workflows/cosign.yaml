@@ -78,5 +78,5 @@ jobs:
             images+="${tag}@${DIGEST} "
             echo $images
           done
-          export COSIGN_REPOSITORY=hub.dev-rudder.rudderlabs.com/dockerhub-proxy
+          export COSIGN_REPOSITORY=hub.dev-rudder.rudderlabs.com/dockerhub-proxy/thrinadh8898
           cosign sign  --yes ${images}
