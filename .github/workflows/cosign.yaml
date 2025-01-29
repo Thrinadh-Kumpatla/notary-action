@@ -61,13 +61,6 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
 
 
-      - name: Login to Harbor
-        uses: docker/login-action@v3  # Updated to latest v3
-        with:
-          registry: hub.dev-rudder.rudderlabs.com
-          username: ${{ secrets.HARBOR_USERNAME }}
-          password: ${{ secrets.HARBOR_PASSWORD }}
-
       - name: Sign the images with GitHub OIDC Token
         env:
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
@@ -79,5 +72,4 @@ jobs:
             images+="${tag}@${DIGEST} "
             echo $images
           done
-          export COSIGN_REPOSITORY=hub.dev-rudder.rudderlabs.com/dockerhub-proxy/thrinadh8898
           cosign sign  --yes ${images}

@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return "export COSIGN_REPOSITORY=hub.dev-rudder.rudderlabs.com/dockerhub-proxy"
+    return "Hello image"
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
