@@ -42,7 +42,13 @@ jobs:
       #     registry: ghcr.io
       #     username: ${{ github.actor }}
       #     password: ${{ secrets.GITHUB_TOKEN }}
-          
+
+      - uses: docker/login-action@v1
+        with:
+          registry: hub.dev-rudder.rudderlabs.com
+          username: ${{ secrets.HARBOR_USERNAME  }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+
       - id: docker_meta
         uses: docker/metadata-action@v4.4.0
         with:
