@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return "Hello, Docker boss! you're great bosses dddd blames me always and always and godfather and godmother"
+    return "export COSIGN_REPOSITORY=hub.dev-rudder.rudderlabs.com/dockerhub-proxy"
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
