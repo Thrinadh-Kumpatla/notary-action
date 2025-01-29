@@ -42,7 +42,7 @@ jobs:
       #     registry: ghcr.io
       #     username: ${{ github.actor }}
       #     password: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - id: docker_meta
         uses: docker/metadata-action@v4.4.0
         with:
@@ -59,7 +59,6 @@ jobs:
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
-
 
       - name: Sign the images with GitHub OIDC Token
         env:
