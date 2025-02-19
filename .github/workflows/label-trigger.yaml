@@ -11,7 +11,7 @@ jobs:
         if: github.event.label.name == 'migration' # Replace with your label name
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: 'CHANNEL_ID' # Replace with your channel ID
+          channel-id: 'C06ADGRE2LQ' # Replace with your channel ID
           slack-message: |
             🔔 *New migration PR labeled!*
             
