@@ -1,0 +1,17 @@
+name: PR Label Notification
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        if: github.event.label.name == 'migration' # Replace with your label name
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: 'CHANNEL_ID' # Replace with your channel ID
+          slack-message: "🔔 New migration PR labeled!\n*Title:* ${{ github.event.pull_request.title }}\n*Author:* ${{ github.event.pull_request.user.login }}\n*Link:* ${{ github.event.pull_request.html_url }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
