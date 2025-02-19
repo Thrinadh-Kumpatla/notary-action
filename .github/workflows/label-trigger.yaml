@@ -11,7 +11,22 @@ jobs:
         if: github.event.label.name == 'migration' # Replace with your label name
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: 'C06ADGRE2LQ' # Replace with your channel ID
-          slack-message: "🔔 New migration PR labeled!\n*Title:* ${{ github.event.pull_request.title }}\n*Author:* ${{ github.event.pull_request.user.login }}\n*Link:* ${{ github.event.pull_request.html_url }}"
+          channel-id: 'CHANNEL_ID' # Replace with your channel ID
+          slack-message: |
+            🔔 *New migration PR labeled!*
+            
+            *Title:* ${{ github.event.pull_request.title }}
+            *Author:* ${{ github.event.pull_request.user.login }}
+            
+            *Description:*
+            ${{ github.event.pull_request.body }}
+            
+            *Changes Overview:*
+            - Base Branch: `${{ github.event.pull_request.base.ref }}`
+            - Number of Changes: ${{ github.event.pull_request.changed_files }} files
+            
+            *Links:*
+            • <${{ github.event.pull_request.html_url }}|View Pull Request>
+            • <${{ github.event.pull_request.html_url }}/files|View Changes>
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
